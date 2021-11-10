@@ -1,0 +1,27 @@
+package agency
+
+const (
+	STATUS_ACTIVE   = "active"
+	STATUS_DEACTIVE = "deactive"
+)
+
+type Agency struct {
+	ID             string `json:"id"`
+	Name           string `json:"name"`
+	Icon           string `json:"icon"`
+	Address        string `json:"address"`
+	PhoneNumber    string `json:"phone_number"`
+	WhatsappNumber string `json:"whatsapp_number"`
+	ViberNumber    string `json:"viber_number"`
+	Status         string `json:"status"`
+	City           string `json:"city"`
+	Gps            gps    `json:"gps"`
+	DateCreated    string `json:"date_created"`
+}
+
+type Agencies []Agency
+
+type gps struct {
+	Long string `json:"long"`
+	Lat  string `json:"lat"`
+}
