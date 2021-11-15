@@ -7,6 +7,7 @@ import (
 
 	"github.com/olivere/elastic/v7"
 	"github.com/superbkibbles/bookstore_utils-go/logger"
+	"github.com/superbkibbles/realestate_agency-api/src/domain/agency/esUpdate"
 )
 
 var (
@@ -19,6 +20,8 @@ type EsClientInterface interface {
 	Save(index string, docType string, doc interface{}) (*elastic.IndexResponse, error)
 	GetAllDoc(index string) (*elastic.SearchResult, error)
 	GetByID(index string, docType string, id string) (*elastic.GetResult, error)
+	Update(indexProperties string, typeProperty string, id string, updateRequest esUpdate.EsUpdate) (*elastic.UpdateResponse, error)
+	Search(index string, query elastic.Query) (*elastic.SearchResult, error)
 }
 
 type esClient struct {
@@ -83,5 +86,31 @@ func (c *esClient) GetByID(index string, docType string, id string) (*elastic.Ge
 		return nil, err
 	}
 
+	return result, nil
+}
+
+func (c *esClient) Update(indexProperties string, typeProperty string, id string, updateRequest esUpdate.EsUpdate) (*elastic.UpdateResponse, error) {
+	ctx := context.Background()
+	arr := make(map[string]interface{})
+	for _, value := range updateRequest.Fields {
+		arr[value.Field] = value.Value
+	}
+
+	result, err := c.client.Update().Index(indexProperties).Type(typeProperty).Id(id).Doc(arr).FetchSource(true).Do(ctx)
+	if err != nil {
+		logger.Error(fmt.Sprintf("error when trying to Update documents in index %s", indexProperties), err)
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *esClient) Search(index string, query elastic.Query) (*elastic.SearchResult, error) {
+	ctx := context.Background()
+	result, err := c.client.Search(index).Query(query).Do(ctx)
+	if err != nil {
+		logger.Error(fmt.Sprintf("error when trying to search documents in index %s", index), err)
+		return nil, err
+	}
 	return result, nil
 }

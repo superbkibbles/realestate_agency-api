@@ -18,5 +18,6 @@ func StartApplication() {
 	handler = http.NewAgencyHandler(agencyservice.NewAgencyService(db.NewDbRepository()))
 	mapUrls()
 
+	router.Static("assets", "clients/visuals")
 	router.Run(":3031")
 }

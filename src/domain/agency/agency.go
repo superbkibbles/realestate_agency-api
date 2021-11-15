@@ -25,3 +25,8 @@ type gps struct {
 	Long string `json:"long"`
 	Lat  string `json:"lat"`
 }
+
+type UpdateAgencyRequest struct {
+	Field string      `json:"field"`
+	Value interface{} `json:"Value"`
+}
