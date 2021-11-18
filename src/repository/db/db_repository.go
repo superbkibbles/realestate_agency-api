@@ -27,8 +27,7 @@ type DbRepository interface {
 	Search(query query.EsQuery) (agency.Agencies, rest_errors.RestErr)
 }
 
-type dbRepository struct {
-}
+type dbRepository struct{}
 
 func NewDbRepository() DbRepository {
 	return &dbRepository{}
@@ -67,12 +66,10 @@ func (db *dbRepository) GetAllAgencies() (agency.Agencies, rest_errors.RestErr) 
 func (db *dbRepository) GetByID(id string) (*agency.Agency, rest_errors.RestErr) {
 	result, err := elasticsearch.Client.GetByID(indexAgency, docType, id)
 	if err != nil {
-		if err != nil {
-			if strings.Contains(err.Error(), "404") {
-				return nil, rest_errors.NewNotFoundErr(fmt.Sprintf("no Property was found with id %s", id))
-			}
-			return nil, rest_errors.NewInternalServerErr(fmt.Sprintf("error when trying to id %s", id), errors.New("database error"))
+		if strings.Contains(err.Error(), "404") {
+			return nil, rest_errors.NewNotFoundErr(fmt.Sprintf("no Property was found with id %s", id))
 		}
+		return nil, rest_errors.NewInternalServerErr(fmt.Sprintf("error when trying to id %s", id), errors.New("database error"))
 	}
 
 	var agency agency.Agency
