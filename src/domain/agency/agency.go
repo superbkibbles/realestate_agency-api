@@ -10,6 +10,7 @@ type Agency struct {
 	Name           string `json:"name"`
 	Icon           string `json:"icon"`
 	Address        string `json:"address"`
+	Promoted       bool   `json:"promoted"`
 	PhoneNumber    string `json:"phone_number"`
 	WhatsappNumber string `json:"whatsapp_number"`
 	ViberNumber    string `json:"viber_number"`
