@@ -65,7 +65,7 @@ func (ah *agencyHandler) GetByID(c *gin.Context) {
 		c.JSON(err.Status(), err)
 		return
 	}
-	c.JSON(http.StatusFound, agency)
+	c.JSON(http.StatusOK, agency)
 }
 
 func (ah *agencyHandler) UploadIcon(c *gin.Context) {
@@ -121,7 +121,7 @@ func (ah *agencyHandler) Search(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusFound, properties)
+	c.JSON(http.StatusOK, properties)
 }
 
 func (ah *agencyHandler) DeleteIcon(c *gin.Context) {

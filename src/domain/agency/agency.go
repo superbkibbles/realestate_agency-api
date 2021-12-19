@@ -9,6 +9,8 @@ type Agency struct {
 	ID             string `json:"id"`
 	Name           string `json:"name"`
 	Icon           string `json:"icon"`
+	Email          string `json:"email"`
+	Country        string `json:"country"`
 	Address        string `json:"address"`
 	Promoted       bool   `json:"promoted"`
 	PhoneNumber    string `json:"phone_number"`

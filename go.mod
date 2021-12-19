@@ -3,6 +3,7 @@ module github.com/superbkibbles/realestate_agency-api
 go 1.16
 
 require (
+	github.com/gin-contrib/cors v1.3.1 // indirect
 	github.com/gin-gonic/gin v1.7.4
 	github.com/olivere/elastic/v7 v7.0.29
 	github.com/superbkibbles/bookstore_utils-go v0.0.0-20210725191636-26b142ec0662
