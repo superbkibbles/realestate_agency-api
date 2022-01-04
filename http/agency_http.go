@@ -6,10 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/superbkibbles/bookstore_utils-go/rest_errors"
-	"github.com/superbkibbles/realestate_agency-api/src/domain/agency"
-	"github.com/superbkibbles/realestate_agency-api/src/domain/agency/esUpdate"
-	"github.com/superbkibbles/realestate_agency-api/src/domain/query"
-	"github.com/superbkibbles/realestate_agency-api/src/services/agencyService"
+	"github.com/superbkibbles/realestate_agency-api/domain/agency"
+	"github.com/superbkibbles/realestate_agency-api/domain/agency/esUpdate"
+	"github.com/superbkibbles/realestate_agency-api/domain/query"
+	"github.com/superbkibbles/realestate_agency-api/services/agencyService"
 )
 
 type AgencyHandler interface {

@@ -12,12 +12,8 @@ import (
 	"time"
 
 	"github.com/superbkibbles/bookstore_utils-go/rest_errors"
-	"github.com/superbkibbles/realestate_agency-api/src/utils/crypto_utils"
+	"github.com/superbkibbles/realestate_agency-api/utils/crypto_utils"
 )
-
-// Save
-// If user not saved
-// Delete Pic
 
 func DeleteFile(fileName string) {
 	if err := os.Remove(filepath.Join("clients/visuals/", filepath.Base(fileName))); err != nil {

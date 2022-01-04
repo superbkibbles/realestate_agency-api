@@ -3,10 +3,10 @@ package app
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/superbkibbles/realestate_agency-api/src/clients/elasticsearch"
-	"github.com/superbkibbles/realestate_agency-api/src/http"
-	"github.com/superbkibbles/realestate_agency-api/src/repository/db"
-	agencyservice "github.com/superbkibbles/realestate_agency-api/src/services/agencyService"
+	"github.com/superbkibbles/realestate_agency-api/clients/elasticsearch"
+	"github.com/superbkibbles/realestate_agency-api/http"
+	"github.com/superbkibbles/realestate_agency-api/repository/db"
+	agencyservice "github.com/superbkibbles/realestate_agency-api/services/agencyService"
 )
 
 var (

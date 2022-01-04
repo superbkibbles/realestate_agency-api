@@ -5,12 +5,12 @@ import (
 	"strings"
 
 	"github.com/superbkibbles/bookstore_utils-go/rest_errors"
-	"github.com/superbkibbles/realestate_agency-api/src/domain/agency"
-	"github.com/superbkibbles/realestate_agency-api/src/domain/agency/esUpdate"
-	"github.com/superbkibbles/realestate_agency-api/src/domain/query"
-	"github.com/superbkibbles/realestate_agency-api/src/repository/db"
-	"github.com/superbkibbles/realestate_agency-api/src/utils/date_utils"
-	"github.com/superbkibbles/realestate_agency-api/src/utils/file_utils"
+	"github.com/superbkibbles/realestate_agency-api/domain/agency"
+	"github.com/superbkibbles/realestate_agency-api/domain/agency/esUpdate"
+	"github.com/superbkibbles/realestate_agency-api/domain/query"
+	"github.com/superbkibbles/realestate_agency-api/repository/db"
+	"github.com/superbkibbles/realestate_agency-api/utils/date_utils"
+	"github.com/superbkibbles/realestate_agency-api/utils/file_utils"
 )
 
 type AgencyService interface {
