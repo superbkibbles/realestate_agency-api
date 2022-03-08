@@ -6,21 +6,46 @@ const (
 )
 
 type Agency struct {
-	ID             string `json:"id"`
-	Name           string `json:"name"`
-	Icon           string `json:"icon"`
-	Email          string `json:"email"`
-	Country        string `json:"country"`
-	Description    string `json:"description"`
-	Address        string `json:"address"`
-	Promoted       bool   `json:"promoted"`
-	PhoneNumber    string `json:"phone_number"`
-	WhatsappNumber string `json:"whatsapp_number"`
-	ViberNumber    string `json:"viber_number"`
-	Status         string `json:"status"`
-	City           string `json:"city"`
-	Gps            gps    `json:"gps"`
-	DateCreated    string `json:"date_created"`
+	ID   string  `json:"id"`
+	Ar   Arabic  `json:"ar"`
+	Kur  Kurdish `json:"kur"`
+	Name string  `json:"name"`
+
+	Icon          string `json:"icon"`
+	BackgroundPic string `json:"background_pic"`
+
+	Email           string `json:"email"`
+	Country         string `json:"country"`
+	Description     string `json:"description"`
+	Address         string `json:"address"`
+	Promoted        bool   `json:"promoted"`
+	IsSponsored     bool   `json:"is_sponsored"`
+	PhoneNumber     string `json:"phone_number"`
+	WhatsappNumber  string `json:"whatsapp_number"`
+	ViberNumber     string `json:"viber_number"`
+	Status          string `json:"status"`
+	City            string `json:"city"`
+	Gps             gps    `json:"gps"`
+	DateCreated     string `json:"date_created"`
+	BackgroundColor string `json:"background_color"`
+}
+
+type TranslateRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+}
+
+type Arabic struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+}
+
+type Kurdish struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
 }
 
 type Agencies []Agency

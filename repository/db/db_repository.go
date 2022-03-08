@@ -25,6 +25,7 @@ type DbRepository interface {
 	UploadIcon(agency *agency.Agency, id string) rest_errors.RestErr
 	Update(id string, updateRequest esUpdate.EsUpdate) (*agency.Agency, rest_errors.RestErr)
 	Search(query query.EsQuery) (agency.Agencies, rest_errors.RestErr)
+	Translate(agencyID string, agencyRequest agency.TranslateRequest, local string) (*agency.Agency, rest_errors.RestErr)
 }
 
 type dbRepository struct{}
@@ -54,9 +55,10 @@ func (db *dbRepository) GetAllAgencies() (agency.Agencies, rest_errors.RestErr) 
 	for i, hit := range result.Hits.Hits {
 		bytes, _ := hit.Source.MarshalJSON()
 		var agency agency.Agency
-		if err := json.Unmarshal(bytes, &agency); err != nil {
-			return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
-		}
+		// if err := json.Unmarshal(bytes, &agency); err != nil {
+		// 	return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
+		// }
+		json.Unmarshal(bytes, &agency)
 		agency.ID = hit.Id
 		agencies[i] = agency
 	}
@@ -74,17 +76,42 @@ func (db *dbRepository) GetByID(id string) (*agency.Agency, rest_errors.RestErr)
 
 	var agency agency.Agency
 
-	bytes, err := result.Source.MarshalJSON()
-	if err != nil {
-		return nil, rest_errors.NewInternalServerErr("error when trying to parse database response", errors.New("database error"))
-	}
+	bytes, _ := result.Source.MarshalJSON()
+	// if err != nil {
+	// 	return nil, rest_errors.NewInternalServerErr("error when trying to parse database response", errors.New("database error"))
+	// }
 
-	if err := json.Unmarshal(bytes, &agency); err != nil {
-		return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
-	}
+	// if err := json.Unmarshal(bytes, &agency); err != nil {
+	// 	return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
+	// }
+
+	json.Unmarshal(bytes, &agency)
 
 	agency.ID = result.Id
 	return &agency, nil
+}
+
+func (db *dbRepository) Translate(agencyID string, agencyRequest agency.TranslateRequest, local string) (*agency.Agency, rest_errors.RestErr) {
+	var es esUpdate.EsUpdate
+	if local == "ar" {
+		update := esUpdate.UpdatePropertyRequest{
+			Field: "ar",
+			Value: agencyRequest,
+		}
+		es.Fields = append(es.Fields, update)
+	}
+	if local == "kur" {
+		update := esUpdate.UpdatePropertyRequest{
+			Field: "kur",
+			Value: agencyRequest,
+		}
+		es.Fields = append(es.Fields, update)
+	}
+	result, err := db.Update(agencyID, es)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 func (db *dbRepository) UploadIcon(agency *agency.Agency, id string) rest_errors.RestErr {
@@ -112,13 +139,14 @@ func (db *dbRepository) Update(id string, updateRequest esUpdate.EsUpdate) (*age
 
 	var ag agency.Agency
 
-	bytes, err := result.GetResult.Source.MarshalJSON()
-	if err != nil {
-		return nil, rest_errors.NewInternalServerErr(fmt.Sprintf("error when trying to parse database response"), errors.New("database error"))
-	}
-	if err := json.Unmarshal(bytes, &ag); err != nil {
-		return nil, rest_errors.NewInternalServerErr(fmt.Sprintf("error when trying to parse database response"), errors.New("database error"))
-	}
+	bytes, _ := result.GetResult.Source.MarshalJSON()
+	// if err != nil {
+	// 	return nil, rest_errors.NewInternalServerErr(fmt.Sprintf("error when trying to parse database response"), errors.New("database error"))
+	// }
+	// if err := json.Unmarshal(bytes, &ag); err != nil {
+	// 	return nil, rest_errors.NewInternalServerErr(fmt.Sprintf("error when trying to parse database response"), errors.New("database error"))
+	// }
+	json.Unmarshal(bytes, &ag)
 
 	ag.ID = result.Id
 	return &ag, nil
@@ -134,9 +162,10 @@ func (db *dbRepository) Search(query query.EsQuery) (agency.Agencies, rest_error
 	for i, hit := range result.Hits.Hits {
 		bytes, _ := hit.Source.MarshalJSON()
 		var property agency.Agency
-		if err := json.Unmarshal(bytes, &property); err != nil {
-			return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
-		}
+		// if err := json.Unmarshal(bytes, &property); err != nil {
+		// 	return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
+		// }
+		json.Unmarshal(bytes, &property)
 		property.ID = hit.Id
 		properties[i] = property
 	}

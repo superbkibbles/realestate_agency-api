@@ -20,6 +20,7 @@ type AgencyHandler interface {
 	Update(*gin.Context)
 	Search(*gin.Context)
 	DeleteIcon(*gin.Context)
+	Translate(*gin.Context)
 }
 
 type agencyHandler struct {
@@ -33,7 +34,8 @@ func NewAgencyHandler(srv agencyService.AgencyService) AgencyHandler {
 }
 
 func (ah *agencyHandler) Get(c *gin.Context) {
-	agencies, err := ah.service.GetAllAgencies()
+	local := c.GetHeader("local")
+	agencies, err := ah.service.GetAllAgencies(local)
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return
@@ -57,10 +59,29 @@ func (ah *agencyHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, agency)
 }
 
+func (ah *agencyHandler) Translate(c *gin.Context) {
+	agencyID := strings.TrimSpace(c.Param("agency_id"))
+	local := c.GetHeader("local")
+	var agencyRequest agency.TranslateRequest
+	if err := c.ShouldBindJSON(&agencyRequest); err != nil {
+		restErr := rest_errors.NewBadRequestErr("Bad Request Body JSON")
+		c.JSON(restErr.Status(), restErr)
+		return
+	}
+	agency, err := ah.service.Translate(agencyID, agencyRequest, local)
+	if err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+
+	c.JSON(http.StatusOK, agency)
+}
+
 func (ah *agencyHandler) GetByID(c *gin.Context) {
 	agencyID := strings.TrimSpace(c.Param("agency_id"))
+	local := c.GetHeader("local")
 
-	agency, err := ah.service.GetByID(agencyID)
+	agency, err := ah.service.GetByID(agencyID, local)
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return
@@ -108,6 +129,7 @@ func (ah *agencyHandler) Update(c *gin.Context) {
 
 func (ah *agencyHandler) Search(c *gin.Context) {
 	var q query.EsQuery
+	local := c.GetHeader("local")
 
 	if err := c.ShouldBindJSON(&q); err != nil {
 		restErr := rest_errors.NewBadRequestErr("Invalid Body JSON")
@@ -115,7 +137,7 @@ func (ah *agencyHandler) Search(c *gin.Context) {
 		return
 	}
 
-	properties, err := ah.service.Search(q)
+	properties, err := ah.service.Search(q, local)
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return
