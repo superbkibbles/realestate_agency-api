@@ -2,15 +2,16 @@ package agencyService
 
 import (
 	"mime/multipart"
-	"strings"
 
+	"github.com/google/uuid"
 	"github.com/superbkibbles/bookstore_utils-go/rest_errors"
 	"github.com/superbkibbles/realestate_agency-api/domain/agency"
 	"github.com/superbkibbles/realestate_agency-api/domain/agency/esUpdate"
 	"github.com/superbkibbles/realestate_agency-api/domain/query"
+	cloudstorage "github.com/superbkibbles/realestate_agency-api/repository/cloudStorage"
 	"github.com/superbkibbles/realestate_agency-api/repository/db"
+	"github.com/superbkibbles/realestate_agency-api/utils/crypto_utils"
 	"github.com/superbkibbles/realestate_agency-api/utils/date_utils"
-	"github.com/superbkibbles/realestate_agency-api/utils/file_utils"
 )
 
 type AgencyService interface {
@@ -25,12 +26,14 @@ type AgencyService interface {
 }
 
 type agencyservice struct {
-	db db.DbRepository
+	db        db.DbRepository
+	cloudRepo cloudstorage.CloudStorage
 }
 
-func NewAgencyService(db db.DbRepository) AgencyService {
+func NewAgencyService(db db.DbRepository, cloudRepo cloudstorage.CloudStorage) AgencyService {
 	return &agencyservice{
-		db: db,
+		db:        db,
+		cloudRepo: cloudRepo,
 	}
 }
 
@@ -140,11 +143,13 @@ func (srv *agencyservice) UploadIcon(id string, fileHeader *multipart.FileHeader
 	if fErr != nil {
 		return nil, rest_errors.NewInternalServerErr("Error while trying to open the file", nil)
 	}
-	filePath, err := file_utils.SaveFile(fileHeader, file)
-	if err != nil {
-		return nil, err
+
+	res, cloudErr := srv.cloudRepo.Save(file, id+crypto_utils.GetMd5(uuid.New().String()), id)
+	if cloudErr != nil {
+		return nil, cloudErr
 	}
-	agency.Icon = "http://localhost:3031/assets/" + filePath
+	agency.Icon = res.Url
+	agency.PublicID = res.PublicID
 
 	srv.db.UploadIcon(agency, id)
 	return agency, nil
@@ -199,13 +204,12 @@ func (srv *agencyservice) DeleteIcon(agencyID string) rest_errors.RestErr {
 	if err != nil {
 		return err
 	}
-
-	splittedPath := strings.Split(agency.Icon, "/")
-	fileName := splittedPath[len(splittedPath)-1]
-
-	file_utils.DeleteFile(fileName)
+	if err := srv.cloudRepo.Delete(agency.PublicID); err != nil {
+		return err
+	}
 
 	agency.Icon = ""
+	agency.PublicID = ""
 	srv.db.UploadIcon(agency, agencyID)
 	return nil
 }

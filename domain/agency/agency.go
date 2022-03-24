@@ -12,6 +12,7 @@ type Agency struct {
 	Name string  `json:"name"`
 
 	Icon          string `json:"icon"`
+	PublicID      string `json:"public_id"`
 	BackgroundPic string `json:"background_pic"`
 
 	Email           string `json:"email"`
@@ -29,6 +30,11 @@ type Agency struct {
 	DateCreated     string `json:"date_created"`
 	BackgroundColor string `json:"background_color"`
 }
+
+// type icon struct {
+// 	Url      string `json:"url"`
+// 	PublicID string `json:"public_id"`
+// }
 
 type TranslateRequest struct {
 	Name        string `json:"name"`
