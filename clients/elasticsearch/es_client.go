@@ -65,7 +65,7 @@ func (c *esClient) GetAllDoc(index string) (*elastic.SearchResult, error) {
 
 	query := elastic.MatchAllQuery{}
 
-	result, err := c.client.Search(index).Query(query).Do(ctx)
+	result, err := c.client.Search(index).Query(query).Size(2000).Do(ctx)
 	if err != nil {
 		logger.Error(fmt.Sprintf("error when trying to search documents in index %s", index), err)
 		return nil, err
@@ -107,7 +107,7 @@ func (c *esClient) Update(indexProperties string, typeProperty string, id string
 
 func (c *esClient) Search(index string, query elastic.Query) (*elastic.SearchResult, error) {
 	ctx := context.Background()
-	result, err := c.client.Search(index).Query(query).Do(ctx)
+	result, err := c.client.Search(index).Query(query).Size(2000).Do(ctx)
 	if err != nil {
 		logger.Error(fmt.Sprintf("error when trying to search documents in index %s", index), err)
 		return nil, err
