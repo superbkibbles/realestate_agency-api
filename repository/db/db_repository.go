@@ -130,6 +130,10 @@ func (db *dbRepository) UploadIcon(agency *agency.Agency, id string) rest_errors
 	update.Value = agency.HeaderPhoto
 	es.Fields = append(es.Fields, update)
 
+	update.Field = "header_photo_public_id"
+	update.Value = agency.HeaderPhotoPublicID
+	es.Fields = append(es.Fields, update)
+
 	_, err := db.Update(id, es)
 	if err != nil {
 		return err
