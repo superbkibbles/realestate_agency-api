@@ -155,7 +155,7 @@ func (srv *agencyservice) UploadIcon(id string, fileHeader *multipart.FileHeader
 	}
 
 	if headerPhoto != nil {
-		headerFile, fErr := fileHeader.Open()
+		headerFile, fErr := headerPhoto.Open()
 		if fErr != nil {
 			return nil, rest_errors.NewInternalServerErr("Error while trying to open the file", nil)
 		}
