@@ -139,30 +139,34 @@ func (srv *agencyservice) UploadIcon(id string, fileHeader *multipart.FileHeader
 	if err != nil {
 		return nil, err
 	}
-	file, fErr := fileHeader.Open()
-	if fErr != nil {
-		return nil, rest_errors.NewInternalServerErr("Error while trying to open the file", nil)
+	if fileHeader != nil {
+		file, fErr := fileHeader.Open()
+		if fErr != nil {
+			return nil, rest_errors.NewInternalServerErr("Error while trying to open the file", nil)
+		}
+
+		res, cloudErr := srv.cloudRepo.Save(file, id+crypto_utils.GetMd5(uuid.New().String()), id)
+		if cloudErr != nil {
+			return nil, cloudErr
+		}
+		agency.Icon = res.Url
+		agency.PublicID = res.PublicID
+
 	}
 
-	headerFile, fErr := fileHeader.Open()
-	if fErr != nil {
-		return nil, rest_errors.NewInternalServerErr("Error while trying to open the file", nil)
-	}
+	if headerPhoto != nil {
+		headerFile, fErr := fileHeader.Open()
+		if fErr != nil {
+			return nil, rest_errors.NewInternalServerErr("Error while trying to open the file", nil)
+		}
 
-	res, cloudErr := srv.cloudRepo.Save(file, id+crypto_utils.GetMd5(uuid.New().String()), id)
-	if cloudErr != nil {
-		return nil, cloudErr
+		res, cloudErr := srv.cloudRepo.Save(headerFile, id+crypto_utils.GetMd5(uuid.New().String()+"new"), id)
+		if cloudErr != nil {
+			return nil, cloudErr
+		}
+		agency.HeaderPhoto = res.Url
+		agency.HeaderPhotoPublicID = res.PublicID
 	}
-	agency.Icon = res.Url
-	agency.PublicID = res.PublicID
-
-	res, cloudErr = srv.cloudRepo.Save(headerFile, id+crypto_utils.GetMd5(uuid.New().String()), id)
-	if cloudErr != nil {
-		return nil, cloudErr
-	}
-
-	agency.HeaderPhoto = res.Url
-	agency.HeaderPhotoPublicID = res.PublicID
 
 	srv.db.UploadIcon(agency, id)
 	return agency, nil
