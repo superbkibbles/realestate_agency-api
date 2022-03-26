@@ -18,7 +18,7 @@ type AgencyService interface {
 	SaveAgency(agency *agency.Agency) rest_errors.RestErr
 	GetAllAgencies(local string) (agency.Agencies, rest_errors.RestErr)
 	GetByID(id string, local string) (*agency.Agency, rest_errors.RestErr)
-	UploadIcon(id string, fileHeader *multipart.FileHeader) (*agency.Agency, rest_errors.RestErr)
+	UploadIcon(id string, fileHeader *multipart.FileHeader, headerPhoto *multipart.FileHeader) (*agency.Agency, rest_errors.RestErr)
 	Update(id string, updateRequest esUpdate.EsUpdate) (*agency.Agency, rest_errors.RestErr)
 	Search(updateRequest query.EsQuery, local string) (agency.Agencies, rest_errors.RestErr)
 	DeleteIcon(agencyID string) rest_errors.RestErr
@@ -134,12 +134,17 @@ func (srv *agencyservice) Translate(agencyID string, agencyRequest agency.Transl
 	return agency, nil
 }
 
-func (srv *agencyservice) UploadIcon(id string, fileHeader *multipart.FileHeader) (*agency.Agency, rest_errors.RestErr) {
+func (srv *agencyservice) UploadIcon(id string, fileHeader *multipart.FileHeader, headerPhoto *multipart.FileHeader) (*agency.Agency, rest_errors.RestErr) {
 	agency, err := srv.GetByID(id, "")
 	if err != nil {
 		return nil, err
 	}
 	file, fErr := fileHeader.Open()
+	if fErr != nil {
+		return nil, rest_errors.NewInternalServerErr("Error while trying to open the file", nil)
+	}
+
+	headerFile, fErr := fileHeader.Open()
 	if fErr != nil {
 		return nil, rest_errors.NewInternalServerErr("Error while trying to open the file", nil)
 	}
@@ -150,6 +155,14 @@ func (srv *agencyservice) UploadIcon(id string, fileHeader *multipart.FileHeader
 	}
 	agency.Icon = res.Url
 	agency.PublicID = res.PublicID
+
+	res, cloudErr = srv.cloudRepo.Save(headerFile, id+crypto_utils.GetMd5(uuid.New().String()), id)
+	if cloudErr != nil {
+		return nil, cloudErr
+	}
+
+	agency.HeaderPhoto = res.Url
+	agency.HeaderPhotoPublicID = res.PublicID
 
 	srv.db.UploadIcon(agency, id)
 	return agency, nil

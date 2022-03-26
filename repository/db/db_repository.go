@@ -116,8 +116,8 @@ func (db *dbRepository) Translate(agencyID string, agencyRequest agency.Translat
 
 func (db *dbRepository) UploadIcon(agency *agency.Agency, id string) rest_errors.RestErr {
 	var es esUpdate.EsUpdate
-
 	var update esUpdate.UpdatePropertyRequest
+
 	update.Field = "icon"
 	update.Value = agency.Icon
 	es.Fields = append(es.Fields, update)
@@ -125,6 +125,9 @@ func (db *dbRepository) UploadIcon(agency *agency.Agency, id string) rest_errors
 	update.Field = "public_id"
 	update.Value = agency.PublicID
 	es.Fields = append(es.Fields, update)
+
+	update.Field = "header_photo"
+	update.Value = agency.HeaderPhoto
 	es.Fields = append(es.Fields, update)
 
 	_, err := db.Update(id, es)

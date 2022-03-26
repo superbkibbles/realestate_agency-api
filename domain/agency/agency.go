@@ -11,9 +11,11 @@ type Agency struct {
 	Kur  Kurdish `json:"kur"`
 	Name string  `json:"name"`
 
-	Icon          string `json:"icon"`
-	PublicID      string `json:"public_id"`
-	BackgroundPic string `json:"background_pic"`
+	Icon                string `json:"icon"`
+	HeaderPhoto         string `json:"header_photo"`
+	PublicID            string `json:"public_id"`
+	HeaderPhotoPublicID string `json:"header_photo_public_id"`
+	BackgroundPic       string `json:"background_pic"`
 
 	Email           string `json:"email"`
 	Country         string `json:"country"`

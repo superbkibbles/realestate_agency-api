@@ -99,7 +99,14 @@ func (ah *agencyHandler) UploadIcon(c *gin.Context) {
 		return
 	}
 
-	agency, uploadErr := ah.service.UploadIcon(agencyID, file)
+	headerPhoto, err := c.FormFile("header_photo")
+	if err != nil {
+		restErr := rest_errors.NewBadRequestErr("Bad Request")
+		c.JSON(restErr.Status(), restErr)
+		return
+	}
+
+	agency, uploadErr := ah.service.UploadIcon(agencyID, file, headerPhoto)
 	if err != nil {
 		c.JSON(uploadErr.Status(), uploadErr)
 		return
