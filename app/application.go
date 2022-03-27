@@ -27,9 +27,10 @@ func StartApplication() {
 	}
 	handler = http.NewAgencyHandler(agencyservice.NewAgencyService(db.NewDbRepository(), cloudstorage.NewRepository(cld)))
 
-	// config := cors.DefaultConfig()
-	// config.AllowAllOrigins = true
-	router.Use(cors.Default())
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AddAllowHeaders("lang")
+	router.Use(cors.New(config))
 
 	mapUrls()
 	// router.Static("assets", "clients/visuals")
