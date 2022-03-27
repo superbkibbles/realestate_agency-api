@@ -17,20 +17,23 @@ type Agency struct {
 	HeaderPhotoPublicID string `json:"header_photo_public_id"`
 	BackgroundPic       string `json:"background_pic"`
 
-	Email           string `json:"email"`
-	Country         string `json:"country"`
-	Description     string `json:"description"`
-	Address         string `json:"address"`
-	Promoted        bool   `json:"promoted"`
-	IsSponsored     bool   `json:"is_sponsored"`
-	PhoneNumber     string `json:"phone_number"`
-	WhatsappNumber  string `json:"whatsapp_number"`
-	ViberNumber     string `json:"viber_number"`
-	Status          string `json:"status"`
-	City            string `json:"city"`
-	Gps             gps    `json:"gps"`
-	DateCreated     string `json:"date_created"`
+	Email          string `json:"email"`
+	Country        string `json:"country"`
+	Description    string `json:"description"`
+	Address        string `json:"address"`
+	Promoted       bool   `json:"promoted"`
+	IsSponsored    bool   `json:"is_sponsored"`
+	PhoneNumber    string `json:"phone_number"`
+	WhatsappNumber string `json:"whatsapp_number"`
+	ViberNumber    string `json:"viber_number"`
+	Status         string `json:"status"`
+	City           string `json:"city"`
+	Gps            gps    `json:"gps"`
+	DateCreated    string `json:"date_created"`
+
+	// Colors
 	BackgroundColor string `json:"background_color"`
+	Color           string `json:"color"`
 }
 
 // type icon struct {
