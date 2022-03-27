@@ -29,7 +29,7 @@ func StartApplication() {
 
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
-	config.AddAllowHeaders("lang")
+	config.AddAllowHeaders("local")
 	router.Use(cors.New(config))
 
 	mapUrls()
