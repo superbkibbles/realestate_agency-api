@@ -16,6 +16,7 @@ type Agency struct {
 	PublicID            string `json:"public_id"`
 	HeaderPhotoPublicID string `json:"header_photo_public_id"`
 	BackgroundPic       string `json:"background_pic"`
+	HeaderText          string `json:"header_text"`
 
 	Email          string `json:"email"`
 	Country        string `json:"country"`
